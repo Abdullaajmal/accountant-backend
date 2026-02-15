@@ -1,0 +1,233 @@
+doctype html
+html
+  head
+    link(rel="shortcut icon" type="image/png" href="/images/icons/favicon.png")
+    meta(name="viewport" content="width=device-width, initial-scale=1")
+    style.
+      .sheet {
+        margin: 0;
+        width: 100%; 
+        height: 297mm;
+      }
+
+      body{
+        width: 100%; 
+        margin: 0;
+        padding: 0px ;
+        background: #ffffff;
+        font-family: sans-serif;
+        font-size:12px;
+        color:#222
+      }
+      *, *:before, *:after {
+        box-sizing: inherit;
+        color:#222
+      }
+
+      .clearfix {
+        display: block; }
+      .left{
+        float:left;
+      }
+      .right{
+        float:right;
+      }
+      .top-area {    
+        display: block;
+        width:100%;
+        
+      }
+      .logo {
+        width: 150px;
+      }
+      .company-info{
+        text-align: right;
+        font-size:12px;
+      }
+      h1.booking{
+        font-size:32px;
+        color:#52008c;
+        margin-top:0;
+      }
+      p.strong{
+        font-weight:700;
+      }
+      .billTo p {
+        text-align: right !important;
+        float:right;
+        display:block;
+        font-size:12px;
+        width:100%;
+        margin-top:0;
+        margin-bottom:10px;
+        
+      }
+
+      .tableHeader{
+        color:#52008c;
+      }
+      .clearfix {
+        display: block; }
+      .col {
+        float:left;
+      }
+      .col-12 {
+        width: 50%; }
+      .col-24 {
+        width: 100%; }
+      .space {
+        margin-top: 30px;
+        margin-bottom: 40px;
+        width:100%;
+      }
+      .info-section {
+        margin-bottom: 20px;
+        padding: 10px;
+        border: 1px solid #e0e0e0;
+        border-radius: 4px;
+      }
+      .info-row {
+        margin-bottom: 8px;
+      }
+      .info-label {
+        font-weight: 700;
+        color: #52008c;
+        display: inline-block;
+        width: 150px;
+      }
+      .info-value {
+        display: inline-block;
+      }
+      .table-booking {
+        width: 100%;
+        border-collapse: collapse;
+        border-spacing: 0;
+        margin-bottom: 20px;
+      }
+      .table-booking th, .table-booking td {
+        padding: 8px;
+        text-align: left;
+        border-bottom: 1px solid #e0e0e0;
+      }
+      .table-booking th {
+        background: #f5f5f5;
+        color:#52008c;
+        font-weight: 700;
+      }
+      .footer-booking {
+        margin-top:30px;
+        color: #5d6975;
+        width: 100%;
+        padding: 20px 0;
+        text-align: center;
+      }
+ 
+  body
+    
+      header.clearfix
+        .top-area
+          img.logo.left(src=settings.public_server_file+settings.company_logo)
+          .right.company-info
+              p.strong #{settings.company_name}
+              p #{settings.company_address}
+              p #{settings.company_reg_number}
+              
+        .col.col-24
+          .space  
+        .left.col-12
+            h1.booking
+              | #{translate('Booking Confirmation')}
+            div 
+              .info-row
+                p.strong #{translate('Booking Number')} : #{model.bookingNumber}
+              .info-row
+                p.strong #{translate('Booking Date')} : #{moment(model.bookingDate).format(dateFormat)}
+              if model.issuanceDate
+                .info-row
+                  p.strong #{translate('Issuance Date')} : #{moment(model.issuanceDate).format(dateFormat)}
+              if model.travelDate
+                .info-row
+                  p.strong #{translate('Travel Date')} : #{moment(model.travelDate).format(dateFormat)}
+              if model.returnDate
+                .info-row
+                  p.strong #{translate('Return Date')} : #{moment(model.returnDate).format(dateFormat)}
+              
+        .right.col-12
+            .billTo
+                p #{translate('Client')} :
+                p #{model.client.name}
+                if model.client.address
+                  p #{model.client.address}
+                if model.client.phone
+                  p #{model.client.phone}
+                if model.client.email
+                  p #{model.client.email}
+        .col.col-24
+          .space  
+      main
+        if model.paxName || model.pnr || model.ticketNumber
+          .info-section
+            h3(style="color:#52008c; margin-bottom:15px;") #{translate('Ticket Details')}
+            if model.paxName
+              .info-row
+                span.info-label #{translate('Passenger Name')}:
+                span.info-value #{model.paxName}
+            if model.pnr
+              .info-row
+                span.info-label #{translate('PNR')}:
+                span.info-value #{model.pnr}
+            if model.ticketNumber
+              .info-row
+                span.info-label #{translate('Ticket Number')}:
+                span.info-value #{model.ticketNumber}
+            if model.airline
+              .info-row
+                span.info-label #{translate('Airline')}:
+                span.info-value #{model.airline}
+            if model.gds
+              .info-row
+                span.info-label #{translate('GDS')}:
+                span.info-value #{model.gds}
+            if model.sector
+              .info-row
+                span.info-label #{translate('Sector')}:
+                span.info-value #{model.sector}
+            if model.sectorType
+              .info-row
+                span.info-label #{translate('Sector Type')}:
+                span.info-value #{model.sectorType}
+
+        if model.basicFare || model.pkrTotalSelling || model.totalBuying
+          .info-section
+            h3(style="color:#52008c; margin-bottom:15px;") #{translate('Financial Details')}
+            table.table-booking
+              if model.basicFare
+                tr
+                  td.strong #{translate('Basic Fare')}:
+                  td #{moneyFormatter({amount:model.basicFare})}
+              if model.pkrTotalSelling
+                tr
+                  td.strong #{translate('Total Selling')}:
+                  td #{moneyFormatter({amount:model.pkrTotalSelling})}
+              if model.totalBuying
+                tr
+                  td.strong #{translate('Total Buying')}:
+                  td #{moneyFormatter({amount:model.totalBuying})}
+              if model.profit
+                tr
+                  td.strong #{translate('Profit')}:
+                  td(style="color:green;") #{moneyFormatter({amount:model.profit})}
+              if model.loss
+                tr
+                  td.strong #{translate('Loss')}:
+                  td(style="color:red;") #{moneyFormatter({amount:model.loss})}
+
+        if model.remarks
+          .info-section
+            h3(style="color:#52008c; margin-bottom:15px;") #{translate('Remarks')}
+            p #{model.remarks}
+        
+      footer.footer-booking
+        | #{translate('Booking Confirmation')} - #{settings.company_name}
+
+   
