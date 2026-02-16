@@ -60,4 +60,5 @@ try {
 const app = require('../src/app');
 
 // Export for Vercel serverless function
+// Vercel automatically handles Express apps
 module.exports = app;
