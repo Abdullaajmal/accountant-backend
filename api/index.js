@@ -60,16 +60,5 @@ try {
 const app = require('../src/app');
 
 // Export for Vercel serverless function
-// Vercel expects a handler function that receives (req, res)
-module.exports = (req, res) => {
-  // Ensure MongoDB is connected before handling requests
-  if (process.env.DATABASE && mongoose.connection.readyState === 0) {
-    mongoose.connect(process.env.DATABASE, {
-      serverSelectionTimeoutMS: 10000,
-      socketTimeoutMS: 45000,
-    });
-  }
-  
-  // Handle the request with Express app
-  return app(req, res);
-};
+// Vercel automatically handles Express apps when exported directly
+module.exports = app;
