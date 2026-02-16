@@ -34,6 +34,15 @@ app.use(compression());
 // // default options
 // app.use(fileUpload());
 
+// Health check route (for Vercel testing)
+app.get('/', (req, res) => {
+  return res.status(200).json({
+    success: true,
+    message: 'Backend API is running',
+    timestamp: new Date().toISOString(),
+  });
+});
+
 // Here our API Routes
 
 app.use('/api', coreAuthRouter);
