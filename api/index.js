@@ -24,24 +24,24 @@ require('dotenv').config({ path: path.join(__dirname, '../.env') });
 require('dotenv').config({ path: path.join(__dirname, '../.env.local') });
 
 // Connect to MongoDB
-let mongoConnected = false;
-
 if (process.env.DATABASE) {
-  mongoose.connect(process.env.DATABASE, {
-    serverSelectionTimeoutMS: 5000,
-  });
-  
-  mongoose.connection.on('error', (error) => {
-    console.log(
-      `1. 🔥 Common Error caused issue → : check your DATABASE env variable`
-    );
-    console.error(`2. 🚫 Error → : ${error.message}`);
-  });
-  
-  mongoose.connection.once('open', () => {
-    console.log('✅ MongoDB connected successfully');
-    mongoConnected = true;
-  });
+  // Check if already connected
+  if (mongoose.connection.readyState === 0) {
+    mongoose.connect(process.env.DATABASE, {
+      serverSelectionTimeoutMS: 10000,
+      socketTimeoutMS: 45000,
+    });
+    
+    mongoose.connection.on('error', (error) => {
+      console.error(`MongoDB Error: ${error.message}`);
+    });
+    
+    mongoose.connection.once('open', () => {
+      console.log('✅ MongoDB connected successfully');
+    });
+  } else {
+    console.log('✅ MongoDB already connected');
+  }
 } else {
   console.warn('⚠️ DATABASE environment variable not set');
 }
